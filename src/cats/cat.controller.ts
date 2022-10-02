@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
+import { ValidationPipe } from 'src/validation.pipe';
 import { CatService } from './cat.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { Cat } from './interfaces/cat.interface';
@@ -18,12 +30,13 @@ export class CatController {
   }
 
   @Get(':id')
-  find(@Param('id') id: number): string {
+  find(@Param('id', ParseIntPipe) id: number): string {
     return `Returning a cat #${id}`;
   }
 
   @Get()
   async findAll(): Promise<Cat[]> {
+    throw new ForbiddenException();
     return await this.catService.findAll();
   }
 }
